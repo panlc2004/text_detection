@@ -34,20 +34,9 @@ class IdentityCardDetector(Detector):
 
     def __find_id_number(self, id_number_line_img):
         gray = cv2.cvtColor(id_number_line_img, cv2.COLOR_RGB2GRAY)
-        gaussian_blur = cv2.GaussianBlur(gray, (3, 3), 0)
-        # 二值化图，主要将灰色部分转成白色，使内容为黑色
-        ret, threshold = cv2.threshold(gaussian_blur, 120, 255, cv2.THRESH_BINARY)
-        h, w = threshold.shape
-        print(h, w)
+        h, w = gray.shape
         p = 0.32
         x = int(w * p)
         y = 0
-        i = threshold[y:y + h, x:x + w]
+        i = gray[y:y + h, x:x + w]
         return i
-        # print(gray.shape)
-        # print('i.shape:', i.shape)
-        # cv2.imshow('t2', i)
-        # return threshold[]
-        # print(threshold.shape)
-        # res = threshold[x:x + h, y:y + w]
-        # cv2.imshow('t3', res)
