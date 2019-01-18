@@ -38,5 +38,5 @@ class IdentityCardDetector(Detector):
         p = 0.32
         x = int(w * p)
         y = 0
-        i = gray[y:y + h, x:x + w]
+        i = id_number_line_img[y:y + h, x:x + w]
         return i
