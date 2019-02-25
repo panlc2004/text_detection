@@ -89,6 +89,12 @@ class Detector:
         return blob
 
     def detect(self, img):
+        """
+        查找文字轮廓
+        :param img: 图片数组
+        :return:  boxes[]——[左上角x,左上角y,右上角x,右上角y,左下角x,左下角y，右下角x,右下角y]
+        多个boxes之间，默认以从上到下的顺序排序（左上角y坐标）
+        """
         img, scale = self.__resize_im(img, scale=TextLineCfg.SCALE, max_scale=TextLineCfg.MAX_SCALE)
         blobs, im_scales = self.__get_blobs(img, None)
         im_blob = blobs['data']
@@ -102,7 +108,16 @@ class Detector:
         boxes = rois[:, 1:5] / im_scales[0]
         textdetector = TextDetector()
         boxes = textdetector.detect(boxes, scores[:, np.newaxis], img.shape[:2])
-        return boxes/scale
+
+        temp = boxes / scale
+        temp = np.asarray(temp, np.int32)  # 转为int
+        # 排序
+        index = np.argsort(temp[:, 1], 0)
+        res = np.zeros(temp.shape, np.int32)
+        for i in range(res.shape[0]):
+            res[i] = temp[index[i]]
+
+        return res
 
 #
 # if __name__ == '__main__':
